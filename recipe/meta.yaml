@@ -14,28 +14,42 @@ source:
     - https://cran.r-project.org/src/contrib/Archive/chron/chron_{{ version }}.tar.gz
   sha256: a9efd0bb306bf2fd1969175e42d85e7fe1a85839ea8e45358e3647fd80a17af0
 
-build:
-  number: 0
-  skip: true  # [win32]
 
+  # patches:
+   # List any patch files here
+   # - fix.patch
+
+build:
+  # If this is a new build for the same version, increment the build number.
+  number: 0
+
+  # This is required to make R link correctly on Linux.
   rpaths:
     - lib/R/lib/
     - lib/
 
+# Suggests: scales, ggplot2
 requirements:
   build:
     - r-base
-    - posix                # [win]
-    - {{native}}toolchain  # [win]
-    - gcc                  # [not win]
+    - {{ compiler('c') }}        # [not win]
+    - {{native}}toolchain        # [win]
 
   run:
     - r-base
+    - {{native}}gcc-libs         # [win]
 
 test:
   commands:
-    - $R -e "library('chron')"  # [not win]
+    # You can put additional test commands to be run here.
+    - $R -e "library('chron')"           # [not win]
     - "\"%R%\" -e \"library('chron')\""  # [win]
+
+  # You can also put a file called run_test.py, run_test.sh, or run_test.bat
+  # in the recipe that will be run at test time.
+
+  # requires:
+    # Put any additional test requirements here.
 
 about:
   home: https://CRAN.R-project.org/package=chron
@@ -47,3 +61,27 @@ extra:
   recipe-maintainers:
     - johanneskoester
     - bgruening
+    - mingwandroid
+
+# The original CRAN metadata for this package was:
+
+# Package: chron
+# Version: 2.3-50
+# Title: Chronological Objects which can Handle Dates and Times
+# Description: Provides chronological objects which can handle dates and times.
+# Authors@R: c(person("David", "James", role = "aut", comment = "S original"), person("Kurt", "Hornik", role = c("aut", "trl", "cre"), email = "Kurt.Hornik@R-project.org"), person("Gabor", "Grothendieck", role = "ctb", email = "ggrothendieck@gmail.com"))
+# Depends: R (>= 2.12.0)
+# Imports: graphics, stats
+# Suggests: scales, ggplot2
+# Enhances: zoo
+# License: GPL-2
+# NeedsCompilation: yes
+# Packaged: 2017-02-20 18:48:49 UTC; hornik
+# Author: David James [aut] (S original), Kurt Hornik [aut, trl, cre], Gabor Grothendieck [ctb]
+# Maintainer: Kurt Hornik <Kurt.Hornik@R-project.org>
+# Repository: CRAN
+# Date/Publication: 2017-02-20 20:21:23
+
+# See
+# http://docs.continuum.io/conda/build.html for
+# more information about meta.yaml
